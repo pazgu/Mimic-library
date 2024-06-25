@@ -1,0 +1,84 @@
+﻿@page
+@model ex1AspNetCore.Pages.IndexModel
+
+<h2>Book Search</h2>
+
+<form asp-page-handler="Search" method="post">
+    <div>
+        <label asp-for="searchTerm">searchTerm:</label>
+        <input required asp-for="searchTerm"/>
+        <button type="submit">Search</button>
+    </div>
+</form>
+<!-- I will render the results in this cases: 
+     - if the user inserted the exact id for the book
+     - if the user inserted part of the title or the whole title
+-->
+@if (Model.SearchResults != null)
+{
+    @if (Model.SearchError)
+    {
+        <p>Invalid search term. Only letters and digits are allowed. Please provide at least 2 letters.</p>       
+    }
+    else if (Model.SearchResults.Count() == 0)
+    {
+        <p>No matching books found.</p>
+    }
+    else
+    {
+        <h4>Search Results:</h4>
+        <p>Results found: @Model.SearchResults.Count</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Book ID</th>
+                    <th>Title</th>
+                    <th>Authors</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Book book in Model.SearchResults)
+                {
+                    <tr>
+                        <td>@book.bookID</td>
+                        <td>@book.title</td>
+                        <td>@book.authors</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+<br />
+<br />
+<h2>Add New Book</h2>
+
+<form asp-page-handler="Add" method="post">  
+    <div>
+        <label asp-for="BookTitle">BookTitle:</label>
+        <input asp-for="BookTitle" required />
+        <label asp-for="BookAuthor">BookAuthors:</label>
+        <input asp-for="BookAuthor" required />
+        <button type="submit">Add Book</button>
+    </div>
+</form>
+@if (ViewData["MessageAdd"] != null)
+{
+    <p>@ViewData["MessageAdd"]</p>
+}
+<br />
+<br />
+<h2>Delete Book by id</h2>
+<form asp-page-handler="Delete" method="post">  
+    <div>
+        <label asp-for="BookId">BookID:</label>
+        <input required asp-for="BookId"/>
+        <button type="submit">Delete</button>
+    </div>
+</form>
+@if (ViewData["MessageDelete"] != null)
+{
+    <p>@ViewData["MessageDelete"]</p>
+}
+
+
